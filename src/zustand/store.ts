@@ -8,10 +8,12 @@ type UserTypes = {
 
 type UserState = {
   users: UserTypes[]
-  addUser: (user: UserTypes) => void
+  user: UserTypes
+  addUserLocal: (user: UserTypes) => void
   fetchUserData: (baseUrl: string) => void
   sendUserToApi: (user: UserTypes) => void
-  editUserName: (userId: number, newName: string) => void
+  editUserNameInObject: (userId: number, newName: string) => void
+  editUserNameInArray: (userId: number, newName: string) => void
   removeUserFromApi: (userId: number) => void
 }
 
@@ -19,22 +21,13 @@ const baseUrl = 'https://649704c183d4c69925a353d4.mockapi.io/todo'
 
 export const useUserStore = create<UserState>((set) => ({
   users: [],
+  user: {
+    id: 0,
+    name: '',
+  },
   fetchUserData: async (baseUrl: string) => {
     const response = await axios.get(baseUrl)
     set({ users: await response.data })
-  },
-  addUser: (user: UserTypes) =>
-    set((state) => ({ users: [...state.users, user] })),
-  editUserName: (userId: number, newName: string) =>
-    set((state) => ({
-      users: state.users.map((user) =>
-        user.id === userId ? { ...user, name: newName } : user,
-      ),
-    })),
-
-  sendUserToApi: async (user: UserTypes) => {
-    const response = await axios.post(baseUrl, user)
-    set((state) => ({ users: [...state.users, response.data] }))
   },
   removeUserFromApi: async (userId: number) => {
     await axios.delete(`${baseUrl}/${userId}`)
@@ -44,4 +37,25 @@ export const useUserStore = create<UserState>((set) => ({
       users: state.users.filter((existingUser) => existingUser.id !== userId),
     }))
   },
+  sendUserToApi: async (user: UserTypes) => {
+    const response = await axios.post(baseUrl, user)
+    set((state) => ({ users: [...state.users, response.data] }))
+  },
+  addUserLocal: (user: UserTypes) =>
+    set((state) => ({ users: [...state.users, user] })),
+  editUserNameInObject: (userId: number, newName: string) =>
+    set((state) => ({
+      user: {
+        ...state.user,
+        name: newName,
+        id: userId,
+      },
+    })),
+
+  editUserNameInArray: (userId: number, newName: string) =>
+    set((state) => ({
+      users: state.users.map((user) =>
+        user.id === userId ? { ...user, name: newName } : user,
+      ),
+    })),
 }))
