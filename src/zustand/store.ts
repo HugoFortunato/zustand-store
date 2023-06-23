@@ -25,8 +25,9 @@ export const useUserStore = create<UserState>((set) => ({
     id: 0,
     name: '',
   },
-  fetchUserData: async (baseUrl: string) => {
+  fetchUserData: async () => {
     const response = await axios.get(baseUrl)
+
     set({ users: await response.data })
   },
   removeUserFromApi: async (userId: number) => {

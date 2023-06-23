@@ -1,17 +1,16 @@
 'use client'
 import { useUserStore } from '@/zustand/store'
-import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 
 export default function TodoList() {
-  const router = useRouter()
   const {
     fetchUserData,
     users,
     sendUserToApi,
     removeUserFromApi,
-    editUserNameInObject,
-    editUserNameInArray,
+    // editUserNameInObject,
+    // editUserNameInArray,
+    // addUserLocal,
   } = useUserStore()
 
   const handleAddUser = () => {
@@ -19,8 +18,6 @@ export default function TodoList() {
       id: 5,
       name: 'name 5',
     })
-
-    router.push('/name-page')
   }
 
   useEffect(() => {
@@ -45,18 +42,10 @@ export default function TodoList() {
                 gap: '1rem',
               }}
             >
-              <span
-                key={item.id}
-                onClick={() => editUserNameInObject(item.id, 'emanuel')}
-              >
+              <span key={item.id} onClick={() => sendUserToApi(item)}>
                 {item.name}
               </span>
-              <span
-                key={item.id}
-                onClick={() => editUserNameInArray(item.id, 'Hugo')}
-              >
-                {item.id}
-              </span>
+              <span key={item.id}>{item.id}</span>
 
               <button onClick={() => removeUserFromApi(item.id)}>delete</button>
             </div>
