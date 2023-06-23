@@ -3,8 +3,13 @@ import { useUserStore } from '@/zustand/store'
 import React, { useEffect } from 'react'
 
 export default function TodoList() {
-  const { fetchUserData, users, sendUserToApi, removeUserFromApi } =
-    useUserStore()
+  const {
+    fetchUserData,
+    users,
+    sendUserToApi,
+    removeUserFromApi,
+    editUserName,
+  } = useUserStore()
 
   const handleAddUser = () => {
     sendUserToApi({
@@ -35,7 +40,9 @@ export default function TodoList() {
                 gap: '1rem',
               }}
             >
-              <span key={item.id}>{item.name}</span>
+              <span key={item.id} onClick={() => editUserName(item.id, 'Hugo')}>
+                {item.name}
+              </span>
 
               <button onClick={() => removeUserFromApi(item.id)}>delete</button>
             </div>

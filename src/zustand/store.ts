@@ -11,6 +11,7 @@ type UserState = {
   addUser: (user: UserTypes) => void
   fetchUserData: (baseUrl: string) => void
   sendUserToApi: (user: UserTypes) => void
+  editUserName: (userId: number, newName: string) => void
   removeUserFromApi: (userId: number) => void
 }
 
@@ -24,6 +25,13 @@ export const useUserStore = create<UserState>((set) => ({
   },
   addUser: (user: UserTypes) =>
     set((state) => ({ users: [...state.users, user] })),
+  editUserName: (userId: number, newName: string) =>
+    set((state) => ({
+      users: state.users.map((user) =>
+        user.id === userId ? { ...user, name: newName } : user,
+      ),
+    })),
+
   sendUserToApi: async (user: UserTypes) => {
     const response = await axios.post(baseUrl, user)
     set((state) => ({ users: [...state.users, response.data] }))
